@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recipe Finder</title>
+  <link rel="stylesheet" href="styles/style.css">
+  <script type="module" src="/scripts/app.js"></script>
+  <style>
+    /* Genel Buton Stilleri */
+    button {
+      background-color: #ff6f61;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #ff5a4c;
+    }
+
+    /* Header */
+    header {
+      background-color: #ff6f61;
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.8em;
+    }
+
+    .navigation {
+      display: flex;
+      gap: 15px;
+    }
+
+    /* Hamburger Menü */
+    .hamburger-menu {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      gap: 5px;
+    }
+
+    .hamburger-menu span {
+      width: 25px;
+      height: 3px;
+      background-color: white;
+    }
+
+    @media screen and (max-width: 768px) {
+      .navigation {
+        display: none;
+        flex-direction: column;
+        background-color: #ff6f61;
+        padding: 10px;
+        position: absolute;
+        top: 60px;
+        right: 0;
+        width: 100%;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .navigation.active {
+        display: flex;
+      }
+      .hamburger-menu {
+        display: flex;
+      }
+    }
+
+    /* Hero Section */
+    .hero-section {
+      background-color: #ff6f61;
+      color: white;
+      text-align: center;
+      padding: 100px 20px;
+      background-image: url('https://www.hrcacademy.com/wp-content/uploads/2023/10/qualities-of-a-sous-chef.jpg'); /* Arka plan resmi buraya */
+      background-size: cover;
+      background-position: center;
+    }
+    .hero-section h2 {
+      font-size: 3em;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .hero-section p {
+      font-size: 1.2em;
+      margin-bottom: 20px;
+    }
+
+    /* Ingredients Section */
+    .ingredient-input {
+      margin: 20px 0;
+      text-align: center;
+    }
+    .ingredient-input input {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      width: 60%;
+      margin-bottom: 10px;
+    }
+
+    /* Recipe Finder Section */
+    .recipe-actions {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    /* Footer */
+    footer {
+      background-color: #333;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      margin-top: 40px;
+    }
+    footer a {
+      color: #ff6f61;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Card Grid for Recipes */
+    .recipe-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin: 20px;
+      padding: 10px;
+    }
+    .recipe-card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .recipe-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .recipe-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .recipe-card h3 {
+      font-size: 1.2em;
+      margin: 10px;
+    }
+    .recipe-card p {
+      font-size: 0.9em;
+      color: #555;
+      margin: 0 10px 10px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <h1>No Connection!!! Only You have access to saved recipes and Add your recipe </h1>
+    <div class="hamburger-menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <nav class="navigation">
+      <button id="show-recipes-button">Show My Recipes</button>
+      <button id="login-button">Login</button>
+      <button id="logout-button" style="display: none;">Logout</button>
+    </nav>
+  </header>
+
+  <header>
+    <h3 id="page-title">Recipe Finder</h3>
+    <div class="language-selector">
+      <label for="language">Language:</label>
+      <select id="language">
+        <option value="en" selected>English</option>
+        <option value="tr">Türkçe</option>
+        <option value="es">Español</option>
+      </select>
+    </div>
+  </header>
+  
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <h2>Recipes Right for Your Family</h2>
+    <p>Find meals tailored to your preferences. Kid-friendly, quick, and easy recipes.</p>
+    <button id="browse-recipes">Browse Recipes</button>
+  </section>
+
+  <!-- Add Your Own Recipe Section -->
+  <div class="add-recipe-container">
+    <h2>Add Your Own Recipe</h2>
+    <form id="recipe-form">
+      <label for="user-recipe-name">Recipe Name:</label>
+      <input type="text" id="user-recipe-name" placeholder="Enter recipe name..." required />
+
+      <label for="user-recipe-description">Recipe Description:</label>
+      <textarea id="user-recipe-description" placeholder="Describe your recipe..." required></textarea>
+
+      <label for="user-recipe-image">Upload Image:</label>
+      <input type="file" id="user-recipe-image" accept="image/*" />
+
+      <div class="camera-container">
+        <button type="button" id="camera-button">Use Camera</button>
+        <div id="camera-capture"></div>
+      </div>
+
+      <button type="submit">Add Recipe</button>
+    </form>
+    <div id="user-recipe-gallery"></div>
+  </div>
+
+  <!-- Ingredients Section -->
+  <div class="ingredient-input">
+    <input type="text" id="ingredient" placeholder="Add an ingredient..." />
+    <button id="add-ingredient">Add Ingredient</button>
+    <button id="add-multiple-ingredients">Add Multiple Ingredients</button>
+  </div>
+
+  <ul id="ingredient-list"></ul>
+
+  <!-- Find Recipes Section -->
+  <div class="recipe-actions">
+    <button id="country-recipes">Find Recipes from My Country</button>
+  </div>
+
+  <div id="recipe-results"></div>
+
+  <!-- Recipe Cards Section -->
+  <div class="recipe-cards">
+    <!-- Recipe Cards Dynamically Injected Here -->
+  </div>
+
+  
+  <div id="message-box"></div>
+  <div id="some-element-id"></div>
+  <div id="recipes-container" style="display: none"></div>
+
+
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Recipe Finder. All rights reserved.</p>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+    <a href="#">Privacy Policy</a>
+  </footer>
+
+  <script>
+    const hamburgerMenu = document.querySelector('.hamburger-menu');
+    const navigation = document.querySelector('.navigation');
+
+    hamburgerMenu.addEventListener('click', () => {
+      navigation.classList.toggle('active');
+    });
+
+ // Sticky header davranışı için scroll event listener
+    document.addEventListener("scroll", () => {
+    const header = document.querySelector("header");
+    const scrollY = window.scrollY;
+
+    if (scrollY > 50) {
+      header.classList.add("scrolled"); // Kaydırıldığında sınıf eklenir
+    } else {
+      header.classList.remove("scrolled"); // Üste geri dönüldüğünde sınıf kaldırılır
+    }
+  });
+
+  </script>
+<script type="module" src="scripts/app.js"></script>
+</body>
+</html>
